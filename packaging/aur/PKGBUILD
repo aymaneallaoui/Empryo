@@ -1,0 +1,40 @@
+pkgname=empryo-bin
+_ver=3.12.1-beta
+pkgver=${_ver//-/}
+pkgrel=1
+pkgdesc="Graph-powered AI coding agent, desktop client (official binary)"
+arch=('x86_64' 'aarch64')
+url="https://empryo.com"
+license=('LicenseRef-Empryo-1.0')
+depends=(
+  'gtk3' 'libnotify' 'nss' 'libxss' 'libxtst' 'xdg-utils' 'at-spi2-core'
+  'util-linux-libs' 'libsecret' 'alsa-lib' 'python' 'python-atspi'
+  'python-xlib' 'python-gobject' 'python-dbus' 'tk' 'xdotool' 'xorg-xprop'
+  'xorg-xrandr' 'wmctrl' 'scrot' 'wl-clipboard' 'xdg-desktop-portal'
+  'glibc' 'libgcc' 'libstdc++' 'glib2' 'nspr' 'dbus' 'systemd-libs' 'expat'
+  'libcups' 'mesa' 'pango' 'cairo' 'libx11' 'libxcb' 'libxext' 'libxfixes'
+  'libxdamage' 'libxcomposite' 'libxrandr' 'libxkbcommon' 'hicolor-icon-theme'
+)
+provides=('empryo')
+conflicts=('empryo')
+options=('!strip' '!debug')
+source_x86_64=("Empryo-${_ver}-linux-x64.pkg.tar.zst::https://dl.empryo.com/v${_ver}/Empryo-${_ver}-linux-x64.pkg.tar.zst")
+source_aarch64=("Empryo-${_ver}-linux-aarch64.pkg.tar.zst::https://dl.empryo.com/v${_ver}/Empryo-${_ver}-linux-aarch64.pkg.tar.zst")
+noextract=("Empryo-${_ver}-linux-x64.pkg.tar.zst" "Empryo-${_ver}-linux-aarch64.pkg.tar.zst")
+sha256sums_x86_64=('75b445d93b313700054dc1acffeba4e00b7d9a42ab26dce920e850a47fccd208')
+sha256sums_aarch64=('bb4fa56e5387d88e1e7ede2046b197bc3b5bf4c80f501e1f38a63946f9bd1154')
+
+package() {
+  bsdtar -xf "${srcdir}"/Empryo-${_ver}-linux-*.pkg.tar.zst -C "${pkgdir}" \
+    --exclude .PKGINFO --exclude .BUILDINFO --exclude .MTREE --exclude .INSTALL
+
+  install -dm755 "${pkgdir}/usr/bin"
+  ln -s /opt/Empryo/empryo-desktop "${pkgdir}/usr/bin/empryo-desktop"
+
+  chmod 0755 "${pkgdir}/opt/Empryo/chrome-sandbox"
+
+  install -Dm644 "${pkgdir}/opt/Empryo/resources/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+  ln -s /opt/Empryo/resources/THIRD_PARTY_LICENSES.md "${pkgdir}/usr/share/licenses/${pkgname}/"
+  ln -s /opt/Empryo/LICENSE.electron.txt   "${pkgdir}/usr/share/licenses/${pkgname}/"
+  ln -s /opt/Empryo/LICENSES.chromium.html "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
