@@ -25,7 +25,7 @@ sha256sums_x86_64=('75b445d93b313700054dc1acffeba4e00b7d9a42ab26dce920e850a47fcc
 sha256sums_aarch64=('bb4fa56e5387d88e1e7ede2046b197bc3b5bf4c80f501e1f38a63946f9bd1154')
 
 package() {
-  bsdtar -xf "${srcdir}"/Empryo-${_ver}-linux-*.pkg.tar.zst -C "${pkgdir}" \
+  bsdtar -xf "${srcdir}/Empryo-${_ver}-linux-${CARCH/x86_64/x64}.pkg.tar.zst" -C "${pkgdir}" \
     --exclude .PKGINFO --exclude .BUILDINFO --exclude .MTREE --exclude .INSTALL
 
   install -dm755 "${pkgdir}/usr/bin"
